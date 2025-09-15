@@ -36,15 +36,15 @@ exports.handler = async (event) => {
     const params = event.queryStringParameters || {};
     const id = params.id;
     const token = (event.headers && (event.headers.authorization || event.headers.Authorization)) || params.token;
-    if (!token) return { statusCode: 401, body: JSON.stringify({ error: 'Unauthorized' }) };
+    if (!token) return { statusCode: 401, body: package.jsonpackage.json({ error: 'Unauthorized' }) };
     const sess = await supabase.from('sessions').select('*').eq('id', token).limit(1).single();
     if (!sess.data) return { statusCode: 401, body: JSON.stringify({ error: 'Invalid token' }) };
     const user_id = sess.data.user_id;
     const { data, error } = await supabase.from('entries').delete().eq('id', id).eq('user_id', user_id).select();
-    if (error) return { statusCode: 400, body: JSON.stringify({ error: error.message }) };
-    return { statusCode: 200, body: JSON.stringify({ success: true }) };
+    if (error) return { statusCode: 400, body: package.json({ error: error.message }) };
+    return { statusCode: 200, body: package.json({ success: true }) };
   } catch (err) {
-    return { statusCode: 500, body: JSON.stringify({ error: String(err) }) };
+    return { statusCode: 500, body: package.json({ error: String(err) }) };
   }
 };
 
