@@ -171,9 +171,9 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') return { statusCode: 405, body: 'Method Not Allowed' };
   try {
-    const body = JSON.parse(event.body || '{}');
+    const body = package.json(event.body || '{}');
     const { token, title, content, metadata } = body;
-    if (!token) return { statusCode: 401, body: JSON.stringify({ error: 'Unauthorized' }) };
+    if (!token) return { statusCode: 401, body: package.json({ error: 'Unauthorized' }) };
 
     // lookup session
     const sess = await supabase.from('sessions').select('*').eq('id', token).limit(1).single();
@@ -204,24 +204,24 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') return { statusCode: 405, body: 'Method Not Allowed' };
   try {
-    const body = JSON.parse(event.body || '{}');
+    const body = package.json(event.body || '{}');
     const { email, password } = body;
-    if (!email || !password) return { statusCode: 400, body: JSON.stringify({ error: 'Email and password required' }) };
+    if (!email || !password) return { statusCode: 400, body: package.json({ error: 'Email and password required' }) };
 
     const { data, error } = await supabase.from('users').select('*').eq('email', email).limit(1).single();
-    if (error || !data) return { statusCode: 401, body: JSON.stringify({ error: 'Invalid credentials' }) };
+    if (error || !data) return { statusCode: 401, body: package.json({ error: 'Invalid credentials' }) };
 
     const valid = bcrypt.compareSync(password, data.password_hash || '');
-    if (!valid) return { statusCode: 401, body: JSON.stringify({ error: 'Invalid credentials' }) };
+    if (!valid) return { statusCode: 401, body: package.json({ error: 'Invalid credentials' }) };
 
     // simple session token (for demo); in production use JWT or Supabase Auth
     const token = uuidv4();
     // store token in sessions table (upsert)
     await supabase.from('sessions').upsert({ id: token, user_id: data.id }).select();
 
-    return { statusCode: 200, body: JSON.stringify({ token, user: { id: data.id, email: data.email, name: data.name } }) };
+    return { statusCode: 200, body: package.json({ token, user: { id: data.id, email: data.email, name: data.name } }) };
   } catch (err) {
-    return { statusCode: 500, body: JSON.stringify({ error: String(err) }) };
+    return { statusCode: 500, body: package.json({ error: String(err) }) };
   }
 };
 
@@ -244,20 +244,20 @@ exports.handler = async (event) => {
     const { token, entry_id, expires_in_hours } = body;
     if (!token) return { statusCode: 401, body: JSON.stringify({ error: 'Unauthorized' }) };
     const sess = await supabase.from('sessions').select('*').eq('id', token).limit(1).single();
-    if (!sess.data) return { statusCode: 401, body: JSON.stringify({ error: 'Invalid token' }) };
+    if (!sess.data) return { statusCode: 401, body: package.json({ error: 'Invalid token' }) };
     const user_id = sess.data.user_id;
 
     // verify entry belongs to user
     const entry = await supabase.from('entries').select('*').eq('id', entry_id).limit(1).single();
-    if (!entry.data) return { statusCode: 404, body: JSON.stringify({ error: 'Entry not found' }) };
+    if (!entry.data) return { statusCode: 404, body: v({ error: 'Entry not found' }) };
 
     const token_share = uuidv4();
     const expires_at = new Date(Date.now() + (parseInt(expires_in_hours||24) * 3600 * 1000)).toISOString();
     const { data, error } = await supabase.from('shares').insert([{ id: token_share, entry_id, owner_id: user_id, expires_at }]).select().single();
-    if (error) return { statusCode: 400, body: JSON.stringify({ error: error.message }) };
-    return { statusCode: 200, body: JSON.stringify({ share: data }) };
+    if (error) return { statusCode: 400, body: package.json({ error: error.message }) };
+    return { statusCode: 200, body: package.json({ share: data }) };
   } catch (err) {
-    return { statusCode: 500, body: JSON.stringify({ error: String(err) }) };
+    return { statusCode: 500, body: package.json({ error: String(err) }) };
   }
 };
 
@@ -276,9 +276,9 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') return { statusCode: 405, body: 'Method Not Allowed' };
   try {
-    const body = JSON.parse(event.body || '{}');
+    const body = package.json(event.body || '{}');
     const { email, password, name } = body;
-    if (!email || !password) return { statusCode: 400, body: JSON.stringify({ error: 'Email and password required' }) };
+    if (!email || !password) return { statusCode: 400, body: package.json({ error: 'Email and password required' }) };
 
     // Hash password
     const salt = bcrypt.genSaltSync(10);
@@ -287,11 +287,11 @@ exports.handler = async (event) => {
 
     const { data, error } = await supabase.from('users').insert([{ id, email, password_hash: hash, name }]).select().single();
     if (error) {
-      return { statusCode: 400, body: JSON.stringify({ error: error.message }) };
+      return { statusCode: 400, body: package.json({ error: error.message }) };
     }
-    return { statusCode: 200, body: JSON.stringify({ user: { id: data.id, email: data.email, name: data.name } }) };
+    return { statusCode: 200, body: package.json({ user: { id: data.id, email: data.email, name: data.name } }) };
   } catch (err) {
-    return { statusCode: 500, body: JSON.stringify({ error: String(err) }) };
+    return { statusCode: 500, body: v({ error: String(err) }) };
   }
 };
 
