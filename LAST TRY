@@ -1,0 +1,55 @@
+{
+  "name": "all-in-one-app",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@supabase/supabase-js": "^2.0.0",
+    "uuid": "^9.0.0"
+  },
+  "scripts": {
+    "start": "netlify dev",
+    "build": "echo 'Static frontend — no build needed'"
+  }
+}
+[build]
+  publish = "frontend"
+  command = "npm install && npm run build"
+
+[dev]
+  functions = "functions"
+-- Supabase tables (users managed by Supabase Auth)
+CREATE TABLE entries (
+    id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id uuid REFERENCES auth.users(id),
+    content text,
+    created_at timestamp default now()
+);
+
+CREATE TABLE shares (
+    id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+    entry_id uuid REFERENCES entries(id),
+    shared_with text,
+    created_at timestamp default now()
+);
+import { createClient } from '@supabase/supabase-js';
+
+const supabaseUrl = 'https://gdprzfbvgajvwhezgvso.supabase.co';
+const supabaseKey = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdkcHJ6ZmJ2Z2FqdndoZXpndnNvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc5MjA5MzksImV4cCI6MjA3MzQ5NjkzOX0.oiQmIXJ7jR5p-ehBVDKnEOWQTIZg931SCOcYEz5n-GM
+const supabase = createClient(supabaseUrl, supabaseKey);
+
+const form = document.getElementById('loginForm');
+form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    if(error) alert(error.message);
+    else alert('Login Successful!');
+});
+export async function handler(event, context) {
+    return {
+        statusCode: 200,
+        body: JSON.stringify({ message: 'Entries function works!' })
+    };
+}
