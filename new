@@ -1050,3 +1050,27 @@ Notes:
    - Visit site URL, sign up a user, log in, create an entry, share it.
 
 If you want me to run through these steps interactively (I cannot click deploy for you), I will produce the exact copy-paste values and commands.
+
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "functions/*.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "frontend/package.json",
+      "use": "@vercel/static-build"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/functions/$1.js"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/frontend/$1"
+    }
+  ]
+}
