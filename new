@@ -1,96 +1,4 @@
-## 1️⃣ frontend/index.html
 
-```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>All-in-One App</title>
-    <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
-    <h1>Welcome to All-in-One App</h1>
-    <a href="login.html">Login</a> | <a href="signup.html">Sign Up</a>
-</body>
-</html>
-```
-
----
-
-## 2️⃣ frontend/login.html
-
-```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Login</title>
-    <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
-    <h2>Login</h2>
-    <form id="loginForm">
-        <input type="email" id="email" placeholder="Email" required><br>
-        <input type="password" id="password" placeholder="Password" required><br>
-        <button type="submit">Login</button>
-    </form>
-    <script src="js/post_login.js"></script>
-</body>
-</html>
-```
-
----
-
-## 3️⃣ frontend/signup.html
-
-```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Sign Up</title>
-    <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
-    <h2>Sign Up</h2>
-    <form id="signupForm">
-        <input type="email" id="email" placeholder="Email" required><br>
-        <input type="password" id="password" placeholder="Password" required><br>
-        <button type="submit">Sign Up</button>
-    </form>
-    <script src="js/post_signup.js"></script>
-</body>
-</html>
-```
-
----
-
-## 4️⃣ frontend/js/post\_signup.js
-
-```javascript
-import { createClient } from '@supabase/supabase-js';
-
-const supabaseUrl = 'https://gdprzfbvgajvwhezgvso.supabase.co';
-const supabaseKey = process.env.SUPABASE_ANON_KEY;
-const supabase = createClient(supabaseUrl, supabaseKey);
-
-const form = document.getElementById('signupForm');
-form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-
-    const { data, error } = await supabase.auth.signUp({ email, password });
-    if(error) alert(error.message);
-    else alert('Sign Up Successful! Check your email for confirmation.');
-});
-```
-
----
-
-## 5️⃣ frontend/js/post\_login.js
-
-```javascript
 import { createClient } from '@supabase/supabase-js';
 
 const supabaseUrl = 'https://gdprzfbvgajvwhezgvso.supabase.co';
@@ -106,95 +14,28 @@ form.addEventListener('submit', async (e) => {
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     if(error) alert(error.message);
     else alert('Login Successful!');
-});
-```
-
----
-
-## 6️⃣ functions/\*.js
-
-Each function can use a Netlify handler template. Example: entries.js:
-
-```javascript
-export async function handler(event, context) {
+});<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <h2>Login</h2>
+    <form id="loginForm">
+        <input type="email" id="email" placeholder="Email" required><br>
+        <input type="password" id="password" placeholder="Password" required><br>
+        <button type="submit">Login</button>
+    </form>export async function handler(event, context) {
     return {
         statusCode: 200,
         body: JSON.stringify({ message: 'Entries function works!' })
     };
-}
-```
-
-*(Same structure for shares.js, health\_check.js, ai\_validation.js)*
-
----
-
-## 7️⃣ supabase\_schema.sql
-
-```sql
--- Supabase tables (users managed by Supabase Auth)
-CREATE TABLE entries (
-    id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
-    user_id uuid REFERENCES auth.users(id),
-    content text,
-    created_at timestamp default now()
-);
-
-CREATE TABLE shares (
-    id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
-    entry_id uuid REFERENCES entries(id),
-    shared_with text,
-    created_at timestamp default now()
-);
-```
-
----
-
-## 8️⃣ package.json
-
-```json
-{
-  "name": "all-in-one-app",
-  "version": "1.0.0",
-  "dependencies": {
-    "@supabase/supabase-js": "^2.0.0",
-    "uuid": "^9.0.0"
-  },
-  "scripts": {
-    "start": "netlify dev",
-    "build": "echo 'No build step required for static frontend'"
-  }
-}
-```
-
----
-
-## 9️⃣ netlify.toml
-
-```toml
-[build]
-  publish = "frontend"
-  command = "npm run build"
-
-[dev]
-  functions = "functions"
-```
-
----
-
-## 10️⃣ .env.example
-
-```
-SUPABASE_URL=https://gdprzfbvgajvwhezgvso.supabase.co
+}SUPABASE_URL=https://gdprzfbvgajvwhezgvso.supabase.co
 SUPABASE_ANON_KEY=YOUR_SUPABASE_ANON_KEY_HERE
 OPENAI_API_KEY=YOUR_OPENAI_API_KEY_HERE
-```
-
----
-
-## 11️⃣ README.md
-
-```
-# All-in-One App
+    <script src="js/post_login.js"></script># All-in-One App
 
 Deploy this project to Netlify and connect to Supabase.
 
@@ -204,32 +45,5 @@ Deploy this project to Netlify and connect to Supabase.
 3. Push to GitHub.
 4. In Netlify, connect repo, build command `npm run build`, publish folder `frontend`.
 5. Deploy!
-```
-
----
-
-## 12️⃣ USER\_MANUAL.md
-
-```
-# User Manual
-
-## Supabase Setup
-1. Go to https://gdprzfbvgajvwhezgvso.supabase.co.
-2. Create a project and get `SUPABASE_ANON_KEY`.
-3. Import `supabase_schema.sql`.
-
-## Frontend
-- Login: `frontend/login.html`
-- Sign Up: `frontend/signup.html`
-
-## Netlify Deployment
-- Create a new site → Connect repo → Publish folder: `frontend` → Build command: `npm run build`
-- Functions folder: `functions`
-
-## Environment Variables
-- SUPABASE_URL, SUPABASE_ANON_KEY, OPENAI_API_KEY
-```
-
----
-
-Karl, if you want, I can **generate the actual `all_in_one_repo.zip` file** ready for download so you don’t have to copy files manually. Do you want me to do that next?
+</body>
+</html>
