@@ -52,8 +52,8 @@ const { createClient } = require('@supabase/supabase-js');
 const bcrypt = require('bcryptjs');
 const { v4: uuidv4 } = require('uuid');
 
-const SUPABASE_URL = process.env.SUPABASE_URL;
-const SUPABASE_KEY = process.env.SUPABASE_SERVICE_KEY;
+const SUPABASE_URL = process.env.https://gdprzfbvgajvwhezgvso.supabase.co
+const SUPABASE_KEY = process.env.eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdkcHJ6ZmJ2Z2FqdndoZXpndnNvIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NzkyMDkzOSwiZXhwIjoyMDczNDk2OTM5fQ.Tou37votOfdYT_jJNdd6Bid2XWEqLC8_JD6W2aaLP2A;
 if (!SUPABASE_URL || !SUPABASE_KEY) {
   console.warn('SUPABASE_URL or SUPABASE_SERVICE_KEY not set in environment.');
 }
