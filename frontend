@@ -1,4 +1,4 @@
-build:
+[deploy]
   command = "cd frontend && npm install && npm run build"
   publish = "frontend"
   functions = "functions"
