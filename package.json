@@ -2,7 +2,7 @@
 "name": "my-app",
 "version": "1.0.0",
 "scripts": {
-"build": "Frontend"
+"build": {"Frontend"}
 },
 "dependencies": {
 "@supabase/supabase-js": "^2.39.7",
