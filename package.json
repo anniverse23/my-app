@@ -17,3 +17,4 @@
 
 [dev]
   functions = "functions"
+# All-in-One App\nDeployed with Netlify + Supabase.
