@@ -1,6 +1,6 @@
-[deploy]
+[directory]
   command = "cd frontend && npm install && npm run build"
-  publish = "frontend"
+  publish = " "
   functions = "functions"
 
 [dev]
