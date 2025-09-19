@@ -1,20 +1,15 @@
 {
-  "name": "all-in-one-app",
+  "name": "my-app",
   "version": "1.0.0",
-  "private": true,
-  "dependencies": {
-    "@supabase/supabase-js": "^2.0.0",
-    "uuid": "^9.0.0"
-  },
   "scripts": {
-    "start": "netlify dev",
-    "build": "echo 'Static frontend — no build needed'"
+    "build": "echo 'No build step needed'"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.7",
+    "uuid": "^9.0.1"
   }
 }
 [build]
-  publish = "frontend"
   command = "npm install && npm run build"
-
-[dev]
+  publish = "frontend"
   functions = "functions"
-# All-in-One App\nDeployed with Netlify + Supabase.
