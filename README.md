@@ -1,1 +1,0 @@
-# All-in-One App\nDeployed with Netlify + Supabase.
